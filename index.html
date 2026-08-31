@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Market30｜30 天投資學習平台</title>
+<meta name="description" content="Market30 是一套公開、可多人使用的 30 天投資學習平台，從市場、產業、個股到投資邏輯循序學習。">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="#home"><span>30</span><b>MARKET30</b></a>
+  <nav><a href="#learn">30天學習</a><a href="#dashboard">我的進度</a><a href="#notes">觀察筆記</a></nav>
+  <button class="nav-cta" onclick="goToday()">開始學習</button>
+</header>
+
+<main>
+<section id="home" class="hero">
+  <div>
+    <div class="tag">PUBLIC LEARNING PLATFORM</div>
+    <h1>30 天，建立你的<br><em>市場判斷力。</em></h1>
+    <p>不是追明牌，而是從每天 5 篇資訊開始，逐步建立市場感、產業感、個股感，最後形成自己的投資研究流程。</p>
+    <div class="hero-actions"><button class="primary" onclick="goToday()">開始我的 30 天</button><button class="outline" onclick="document.querySelector('#roadmap').scrollIntoView({behavior:'smooth'})">看看怎麼學</button></div>
+    <small>免費使用・免登入・每個人的進度獨立儲存</small>
+  </div>
+  <div class="hero-panel">
+    <div class="circle"><strong id="heroPct">0%</strong><span>完成度</span></div>
+    <div><span class="muted">我的學習</span><h2 id="heroDays">0 / 30 天</h2><p>每天完成一點，累積真正的市場語感。</p></div>
+  </div>
+</section>
+
+<section id="roadmap" class="section">
+  <div class="section-title"><span>ROADMAP</span><h2>一條路，五個階段</h2><p>由淺入深，不一次塞滿所有指標。</p></div>
+  <div class="roadmap" id="roadmapCards"></div>
+</section>
+
+<section id="learn" class="section learn">
+  <div class="section-title"><span>30 DAYS</span><h2>今天學什麼？</h2></div>
+  <div class="learn-grid">
+    <article class="lesson">
+      <div class="lesson-head"><span id="phase">LEVEL 1 · 市場感</span><span id="day">DAY 1 / 30</span></div>
+      <h2 id="title"></h2><p id="goal" class="goal"></p>
+      <h3>今日任務</h3><div id="tasks"></div>
+      <div class="reflection"><label id="reflectionLabel"></label><textarea id="note" placeholder="把今天看到的、想到的寫下來……"></textarea><button class="primary" onclick="saveNote()">儲存今天</button></div>
+      <div class="pager"><button onclick="changeDay(-1)">← 上一天</button><button onclick="changeDay(1)">下一天 →</button></div>
+    </article>
+    <aside class="coach">
+      <span>LEARNING RULE</span><h3>先觀察，<br>再判斷。</h3>
+      <p>30 天不是要你變成投資高手，而是建立一套「看到資訊 → 找到產業 → 研究公司 → 驗證股價 → 記錄判斷」的習慣。</p>
+      <div class="quote">「不求一次看對，只求每一次都比上一次更懂。」</div>
+    </aside>
+  </div>
+</section>
+
+<section id="dashboard" class="section dashboard">
+  <div class="section-title"><span>MY DASHBOARD</span><h2>我的學習進度</h2></div>
+  <div class="stats">
+    <div><b id="statDays">0</b><span>完成天數</span></div><div><b id="statTasks">0</b><span>完成任務</span></div><div><b id="statNotes">0</b><span>學習筆記</span></div><div><b id="statStreak">0</b><span>目前連續天數</span></div>
+  </div>
+  <div class="progress"><div id="bar"></div></div>
+  <div id="dayDots" class="dots"></div>
+</section>
+
+<section id="notes" class="section notes">
+  <div class="section-title"><span>NOTEBOOK</span><h2>我的投資觀察庫</h2><p>把零散資訊，慢慢變成自己的資料庫。</p></div>
+  <div class="note-grid">
+    <label>本週市場三大主題<textarea data-global="themes" placeholder="例如：AI、利率、半導體……"></textarea></label>
+    <label>正在觀察的產業<textarea data-global="industries" placeholder="例如：AI伺服器、散熱、PCB……"></textarea></label>
+    <label>我的不買清單<textarea data-global="avoid" placeholder="例如：看不懂公司、不知道為什麼買……"></textarea></label>
+  </div>
+  <div class="export"><button class="outline" onclick="exportData()">匯出我的學習紀錄</button><button class="danger" onclick="resetAll()">清除我的資料</button></div>
+</section>
+
+<section class="section community">
+  <div><span>FOR EVERYONE</span><h2>一套模板，<br>每個人都能開始。</h2></div>
+  <div><p>這個平台不需要預設你會選股，也不要求你每天花很多時間。每位使用者都可以用自己的節奏完成 30 天。</p><p class="muted">未來可以接上帳號系統、排行榜、每日市場資料、AI 摘要與社群共學。</p></div>
+</section>
+</main>
+
+<footer>MARKET30 · 30 天投資學習平台　｜　僅供教育與資訊整理，不構成投資建議。</footer>
+
+<script>
+const lessons=[
+["建立你的投資資訊環境","找到固定財經資訊來源，開始每天接觸市場。",["找到 3 個固定財經資訊來源","找到 1 個查看大盤／個股的平台","建立投資筆記","今天閱讀 5 篇市場資訊"],"今天最常出現的關鍵字："],
+["今天市場在關注什麼？","練習從大量資訊中找出真正重要的市場主題。",["閱讀 5 篇資訊","找出 3 個關鍵字","找出 3 個受關注產業","查看今天大盤漲跌"],"如果今天只能記住一件市場上的事情，那會是什麼？"],
+["新聞 → 產業","建立事件、產業與個股之間的連結。",["閱讀 5 篇資訊","選 1 篇最有興趣的新聞","找出受影響產業","找出可能受影響公司"],"我的第一條產業連結："],
+["利多？利空？","先自己判斷，不追求一次答對。",["閱讀 5 篇資訊","挑 3 篇判斷利多／利空","寫下判斷理由","回頭比較實際反應"],"今天哪個判斷最讓我意外？"],
+["消息真的會讓股票上漲嗎？","開始觀察新聞與股價，而不是把兩者直接畫上等號。",["找一則重要新聞","找相關股票","查看股價反應","寫下可能原因"],"為什麼利多消息可能沒有讓股價上漲？"],
+["認識市場資金","初步認識外資、投信、自營商。",["查三大法人買賣超","找 3 檔股票","比較資金與股價","記下 1 個疑問"],"資金流向與股價今天有什麼關係？"],
+["第一週總結","把一週資訊整理成自己的市場週報。",["整理 3 大市場主題","找最強與最弱產業","選 3 檔觀察股","寫下本週收穫"],"如果向朋友解釋本週市場，我會怎麼說？"],
+["選一個產業","開始從單一股票拉高視角。",["選一個熱門產業","了解它在做什麼","找 5 家相關公司","記下市場關注原因"],"我的產業："],
+["畫出產業鏈","理解上游、中游、下游的角色。",["找上游","找中游","找下游","放入代表公司"],"上游 → 中游 → 下游："],
+["產業誰最受惠？","從產業消息找出直接受惠者。",["找一則產業利多","找 5 家相關公司","比較誰最直接受惠","寫下理由"],"我認為最直接受惠的公司："],
+["產業的風險","任何產業都有逆風因素。",["找 1 個產業風險","判斷影響需求／成本／競爭","找可能受影響公司","寫下觀察"],"我找到的主要風險："],
+["產業景氣","從多個訊號判斷產業方向。",["查看近期資訊","觀察需求","觀察價格／訂單／庫存","判斷變好、變差或不確定"],"我認為目前產業狀態："],
+["產業比較","培養產業相對強弱概念。",["選 3 個產業","比較近期趨勢","找出最強產業","說明原因"],"哪個產業最值得持續觀察？"],
+["第二週總結","確認自己能從產業角度看市場。",["能解釋產業在做什麼","知道上下游","知道至少 5 家公司","知道主要利多與風險"],"為什麼最近市場在關注這個產業？"],
+["公司到底賺什麼錢？","開始研究一家公司。",["找主要產品","找主要客戶","找主要市場","找主要營收來源"],"用一句話介紹這家公司："],
+["營收","用營收趨勢理解公司的生意。",["查看近幾個月營收","看年增率","看月增率","判斷營收趨勢"],"我的觀察："],
+["獲利","認識毛利率、營業利益率與 EPS。",["找到 EPS","查看近幾季","觀察獲利是否成長","記下一個問題"],"公司的獲利趨勢："],
+["公司有沒有競爭力？","從技術、品牌、客戶與地位找優勢。",["找特殊技術或產品","找重要客戶","看市場地位","找競爭門檻"],"我認為最重要的優勢："],
+["公司有什麼風險？","建立看優點也看風險的習慣。",["找至少 3 個風險","區分短期與長期","找最重要風險","寫下擔心的地方"],"我找到的 3 個主要風險："],
+["公司 vs 股價","把產業、基本面、消息、資金與股價串起來。",["回顧產業趨勢","回顧基本面","觀察市場消息","比較資金與股價"],"這家公司為什麼受到市場注意？"],
+["第一次個股健檢","完成第一張個股研究卡。",["判斷產業趨勢","整理營收與獲利","整理競爭力","整理資金與股價","列出風險"],"我目前會觀察這家公司，是因為："],
+["認識 K 線","正式進入技術面。",["看懂紅 K／黑 K","開盤價","收盤價","最高與最低價"],"今天最重要的 K 線概念："],
+["成交量","觀察價格與成交量是否同步。",["找價格↑＋量↑案例","找價格↑＋量↓案例","找價格↓＋量↑案例","寫下差異"],"我的觀察："],
+["趨勢","練習判斷股票的大方向。",["找 3 檔股票","判斷上升／下降／橫盤","說明依據","不急著交易"],"哪一檔最容易判斷？"],
+["支撐與壓力","理解價格可能反覆反應的位置。",["找一檔股票","找可能支撐","找可能壓力","觀察後續反應"],"我的觀察："],
+["技術面 × 基本面","理解判斷不能只靠單一指標。",["選 3 檔","比較基本面","比較產業","比較技術面"],"如果三個面向矛盾，我會先研究什麼？"],
+["我為什麼會想買？","建立自己的投資條件。",["列 5 個想買理由","區分必要與加分","找最重視的 3 個因素","檢查證據"],"我的投資判斷條件："],
+["什麼情況我不買？","建立自己的不買清單。",["寫 3 個不買條件","加入只因別人推薦","加入不知道為什麼買","加入看不懂公司"],"我的不買清單："],
+["建立自己的投資檢查表","把 29 天濃縮成固定流程。",["公司做什麼？","什麼產業？趨勢如何？","營收與獲利如何？","優勢與風險？","消息、資金、股價如何？"],"我最常忽略的檢查項目："],
+["完成第一份投資研究報告","整合全部資訊，完成自己的研究模板。",["選一檔股票","整理公司與產業","整理基本面","整理消息與資金","整理股價與風險","寫下結論"],"我的最終結論與理由："]
+];
+const phaseData=[
+["LEVEL 1","建立市場感","Day 1–7",0,7],["LEVEL 2","建立產業感","Day 8–14",7,14],["LEVEL 3","建立個股感","Day 15–21",14,21],["LEVEL 4","開始看懂股價","Day 22–26",21,26],["LEVEL 5","建立投資邏輯","Day 27–30",26,30]
+];
+let state=JSON.parse(localStorage.getItem("market30")||'{"current":0,"days":{},"global":{}}');
+let current=state.current||0;
+function dayData(i){return state.days[i]||{tasks:[],note:""}}
+function phase(i){return i<7?phaseData[0]:i<14?phaseData[1]:i<21?phaseData[2]:i<26?phaseData[3]:phaseData[4]}
+function persist(){state.current=current;localStorage.setItem("market30",JSON.stringify(state));renderStats();renderRoadmap();renderDots()}
+function render(){
+ const l=lessons[current],d=dayData(current),p=phase(current);
+ document.getElementById("phase").textContent=p[0]+" · "+p[1];
+ document.getElementById("day").textContent=`DAY ${current+1} / 30`;
+ document.getElementById("title").textContent=l[0]; document.getElementById("goal").textContent=l[1];
+ document.getElementById("reflectionLabel").textContent=l[3]; document.getElementById("note").value=d.note||"";
+ const box=document.getElementById("tasks");box.innerHTML="";
+ l[2].forEach((t,i)=>{let lab=document.createElement("label");lab.className="task";lab.innerHTML=`<input type="checkbox" ${d.tasks.includes(i)?"checked":""}><span>${t}</span>`;lab.querySelector("input").onchange=e=>{let x=dayData(current);x.tasks=e.target.checked?[...new Set([...x.tasks,i])]:x.tasks.filter(v=>v!==i);state.days[current]=x;persist()};box.appendChild(lab)});
+ renderStats();renderRoadmap();renderDots();
+}
+function renderStats(){
+ let days=0,tasks=0,notes=0;lessons.forEach((l,i)=>{let d=dayData(i);if(d.tasks.length===l[2].length)days++;tasks+=d.tasks.length;if((d.note||"").trim())notes++});
+ document.getElementById("statDays").textContent=days;document.getElementById("statTasks").textContent=tasks;document.getElementById("statNotes").textContent=notes;
+ let streak=0;for(let i=0;i<30;i++){if(dayData(i).tasks.length===lessons[i][2].length)streak++;else break}document.getElementById("statStreak").textContent=streak;
+ let pct=Math.round(days/30*100);document.getElementById("heroPct").textContent=pct+"%";document.getElementById("heroDays").textContent=days+" / 30 天";document.getElementById("bar").style.width=pct+"%";
+}
+function renderRoadmap(){let box=document.getElementById("roadmapCards");box.innerHTML="";phaseData.forEach((p,k)=>{let done=0;for(let i=p[3];i<p[4];i++)if(dayData(i).tasks.length===lessons[i][2].length)done++;let el=document.createElement("button");el.className="phase";el.innerHTML=`<small>${p[0]}</small><b>${p[1]}</b><span>${p[2]}</span><i><u style="width:${done/(p[4]-p[3])*100}%"></u></i><em>${done}/${p[4]-p[3]} 完成</em>`;el.onclick=()=>{current=p[3];persist();document.querySelector("#learn").scrollIntoView({behavior:"smooth"})};box.appendChild(el)})}
+function renderDots(){let box=document.getElementById("dayDots");box.innerHTML="";for(let i=0;i<30;i++){let b=document.createElement("button");b.textContent=i+1;b.className=i===current?"active":dayData(i).tasks.length===lessons[i][2].length?"done":"";b.onclick=()=>{current=i;persist();render()};box.appendChild(b)}}
+function changeDay(n){current=Math.max(0,Math.min(29,current+n));persist();render();document.querySelector("#learn").scrollIntoView({behavior:"smooth",block:"start"})}
+function goToday(){document.querySelector("#learn").scrollIntoView({behavior:"smooth"});render()}
+function saveNote(){let d=dayData(current);d.note=document.getElementById("note").value;state.days[current]=d;persist();alert("今天的筆記已儲存 ✓")}
+function exportData(){let out=["MARKET30｜我的 30 天學習紀錄","================================"];lessons.forEach((l,i)=>{let d=dayData(i);out.push(`\nDay ${i+1}｜${l[0]}\n任務：${d.tasks.length}/${l[2].length}\n筆記：${d.note||"未填寫"}`)});out.push("\n\n市場三大主題："+(state.global.themes||""),"\n觀察產業："+(state.global.industries||""),"\n不買清單："+(state.global.avoid||""));let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([out.join("\n")],{type:"text/plain;charset=utf-8"}));a.download="Market30-我的學習紀錄.txt";a.click()}
+function resetAll(){if(confirm("確定清除這台裝置上的 Market30 學習資料嗎？")){localStorage.removeItem("market30");location.reload()}}
+document.querySelectorAll("[data-global]").forEach(el=>{el.value=state.global[el.dataset.global]||"";el.oninput=()=>{state.global[el.dataset.global]=el.value;localStorage.setItem("market30",JSON.stringify(state))}});
+render();
+</script>
+</body></html>
